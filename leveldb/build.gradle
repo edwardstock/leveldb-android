@@ -39,6 +39,44 @@ apply plugin: 'com.jfrog.bintray'
 group = "com.edwardstock.android"
 version = "2.0.0"
 
+ext {
+    buildArtifactName = project.name
+    buildArtifactVersion = version
+    buildArtifactGroup = group
+
+    pomName = "leveldb"
+    pomUrl = "https://github.com/edwardstock/leveldb"
+    pomScm = {
+        connection = "scm:git:git://github.com/edwardstock/leveldb.git"
+        url = pomUrl
+    }
+    pomInceptionYear = "2014"
+    pomContributors = {}
+    pomDescription = "LevelDB bindings for Android."
+    pomDevelopers = {
+        developer {
+            id = "hf"
+            name = "Stojan Dimitrovski"
+            email = "sdimitrovski@gmail.com"
+            roles = ["creator"]
+        }
+        developer {
+            id = "edwardstock"
+            name = "Eduard Maximovich"
+            email = "edwatd.vstock@gmail.com"
+            roles = ["forker"]
+            timezone = "Europe/Moscow"
+        }
+    }
+    pomLicenses = {
+        license {
+            name = "BSD 3-Clause"
+            url = "https://github.com/hf/leveldb-android/blob/master/LICENSE.txt"
+            distribution = "repo"
+        }
+    }
+}
+
 Properties localProps = new Properties()
 localProps.load(project.rootProject.file('gradle.properties').newDataInputStream())
 
