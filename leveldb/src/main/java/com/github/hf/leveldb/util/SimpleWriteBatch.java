@@ -33,10 +33,10 @@ package com.github.hf.leveldb.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import com.github.hf.leveldb.LevelDB;
 import com.github.hf.leveldb.WriteBatch;
 import com.github.hf.leveldb.exception.LevelDBException;
 import com.github.hf.leveldb.exception.LevelDBNotFoundException;
-import com.github.hf.leveldb.LevelDB;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -118,6 +118,16 @@ public class SimpleWriteBatch implements WriteBatch {
     }
 
     /**
+     * Put the key-value pair in the database.
+     * @param key the key to write
+     * @param value the value to write
+     * @return this WriteBatch for chaining
+     */
+    public SimpleWriteBatch put(String key, String value) {
+        return put(key.getBytes(), value.getBytes());
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -133,6 +143,10 @@ public class SimpleWriteBatch implements WriteBatch {
         operations.add(Operation.put(key, value));
 
         return this;
+    }
+
+    public SimpleWriteBatch del(String key) {
+        return del(key.getBytes());
     }
 
     /**

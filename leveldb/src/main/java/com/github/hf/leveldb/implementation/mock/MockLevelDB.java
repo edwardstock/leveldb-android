@@ -34,6 +34,7 @@ package com.github.hf.leveldb.implementation.mock;
  */
 
 import android.util.Log;
+
 import com.github.hf.leveldb.Iterator;
 import com.github.hf.leveldb.LevelDB;
 import com.github.hf.leveldb.Snapshot;
@@ -45,6 +46,8 @@ import com.github.hf.leveldb.util.Bytes;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
+
+import javax.annotation.Nonnull;
 
 public class MockLevelDB extends LevelDB {
 
@@ -66,6 +69,7 @@ public class MockLevelDB extends LevelDB {
 
         if (multipleClose) {
             Log.i(MockLevelDB.class.getName(), "Trying to close Mock LevelDB multiple times.");
+            closed = true;
         }
     }
 
@@ -87,7 +91,7 @@ public class MockLevelDB extends LevelDB {
     }
 
     @Override
-    public synchronized void write(WriteBatch writeBatch, boolean sync) throws LevelDBException {
+    public synchronized void write(@Nonnull WriteBatch writeBatch, boolean sync) throws LevelDBException {
         if (writeBatch == null) {
             throw new IllegalArgumentException("Write batch must not be null.");
         }
@@ -104,7 +108,7 @@ public class MockLevelDB extends LevelDB {
     }
 
     @Override
-    public byte[] get(byte[] key, Snapshot snapshot) throws LevelDBSnapshotOwnershipException, LevelDBException {
+    public byte[] get(@Nonnull byte[] key, Snapshot snapshot) throws LevelDBSnapshotOwnershipException, LevelDBException {
         if (key == null) {
             throw new IllegalArgumentException("Key must not be null.");
         }
@@ -131,7 +135,7 @@ public class MockLevelDB extends LevelDB {
     }
 
     @Override
-    public synchronized void del(byte[] key, boolean sync) throws LevelDBException {
+    public synchronized void del(@Nonnull byte[] key, boolean sync) throws LevelDBException {
         if (key == null) {
             throw new IllegalArgumentException("Key must not be null.");
         }

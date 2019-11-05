@@ -19,7 +19,7 @@ Add this to your build.gradle:
 ```groovy
 repositories {
   maven {
-    url "https://dl.bintray.com/stojan/android"
+    url "https://dl.bintray.com/edwardstock/android"
   }
 }
 ```
@@ -28,7 +28,7 @@ And then this as a dependency:
 
 ```groovy
 dependencies {
-  compile 'com.github.hf:leveldb:1.19.0@aar'
+  implementation 'com.edwardstock.android:leveldb:2.0.0'
 }
 ```
 
@@ -46,6 +46,7 @@ If you really want to obfuscate LevelDB, then make sure that the exceptions are 
 
 ```java
 LevelDB levelDB = LevelDB.open("path/to/leveldb", LevelDB.configure().createIfMissing(true));
+// or u can just
 
 levelDB.put("leveldb".getBytes(), "Is awesome!".getBytes());
 String value = levelDB.get("leveldb".getBytes());
@@ -54,6 +55,20 @@ leveldb.put("magic".getBytes(), new byte[] { 0, 1, 2, 3, 4 });
 byte[] magic = levelDB.getBytes("magic".getBytes());
 
 levelDB.close(); // closing is a must!
+```
+
+
+### The same, but using try-with-resource
+```java
+try(LevelDB levelDb = LevelDB.open("path/to/leveldb", LevelDB.configure().createIfMissing(true))) {
+    levelDB.put("leveldb".getBytes(), "Is awesome!".getBytes());
+    String value = levelDB.get("leveldb".getBytes());
+    
+    leveldb.put("magic".getBytes(), new byte[] { 0, 1, 2, 3, 4 });
+    byte[] magic = levelDB.getBytes("magic".getBytes());   
+}
+
+// no needs to close manually
 ```
 
 ### WriteBatch (a.k.a. Transactions)

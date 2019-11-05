@@ -34,6 +34,8 @@ package com.github.hf.leveldb.implementation;
  */
 
 import android.util.Log;
+
+import com.github.hf.leveldb.LevelDB;
 import com.github.hf.leveldb.WriteBatch;
 
 import java.io.Closeable;
@@ -45,7 +47,7 @@ import java.io.Closeable;
  */
 public class NativeWriteBatch implements Closeable {
     static {
-        System.loadLibrary("leveldb");
+        LevelDB.loadNative();
     }
 
     // Don't touch this. If you do, something somewhere dies.

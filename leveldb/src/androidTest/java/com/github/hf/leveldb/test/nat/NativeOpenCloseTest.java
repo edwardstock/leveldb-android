@@ -38,26 +38,43 @@ import com.github.hf.leveldb.exception.LevelDBException;
 import com.github.hf.leveldb.implementation.NativeLevelDB;
 import com.github.hf.leveldb.test.common.DatabaseTestCase;
 
+import org.junit.Test;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
+
 /**
  * Created by hermann on 8/16/14.
  */
 public class NativeOpenCloseTest extends DatabaseTestCase {
 
-    @Override
-    protected LevelDB obtainLevelDB() throws Exception {
-        throw new UnsupportedOperationException("This is a nat-only test case. Shouldn't use this method.");
-    }
-
+    @Test
     public void testCreateAndOpenNonExistingDatabase() throws Exception {
         assertFalse(dbFile.exists());
 
         NativeLevelDB ndb = new NativeLevelDB(dbFile.getAbsolutePath(), LevelDB.configure().createIfMissing(true));
+        assertFalse(ndb.isClosed());
 
         ndb.close();
+        ndb.close();
+
+
+        assertTrue(dbFile.exists());
+        assertTrue(ndb.isClosed());
+    }
+
+    @Test
+    public void testCreateAndOpenNonExistingDatabaseAutoClose() throws Exception {
+        assertFalse(dbFile.exists());
+
+        try (NativeLevelDB ndb = new NativeLevelDB(dbFile.getAbsolutePath(), LevelDB.configure().createIfMissing(true))) {
+            assertFalse(ndb.isClosed());
+        }
 
         assertTrue(dbFile.exists());
     }
 
+    @Test
     public void testOpenAnExistingDatabase() throws Exception {
         assertFalse(dbFile.exists());
 
@@ -74,6 +91,7 @@ public class NativeOpenCloseTest extends DatabaseTestCase {
         assertTrue(dbFile.exists());
     }
 
+    @Test
     public void testTwiceOpenADatabase() throws Exception {
         assertFalse(dbFile.exists());
 
@@ -93,5 +111,10 @@ public class NativeOpenCloseTest extends DatabaseTestCase {
         ndbA.close();
 
         assertTrue(dbFile.exists());
+    }
+
+    @Override
+    protected LevelDB obtainLevelDB() throws Exception {
+        return new NativeLevelDB(dbFile.getAbsolutePath(), LevelDB.configure().createIfMissing(true));
     }
 }

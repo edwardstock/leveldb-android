@@ -35,29 +35,34 @@ package com.github.hf.leveldb.test.common;
 
 import com.github.hf.leveldb.Iterator;
 import com.github.hf.leveldb.LevelDB;
-import com.github.hf.leveldb.util.SimpleWriteBatch;
 import com.github.hf.leveldb.exception.LevelDBClosedException;
 import com.github.hf.leveldb.exception.LevelDBIteratorNotValidException;
 import com.github.hf.leveldb.util.Bytes;
+import com.github.hf.leveldb.util.SimpleWriteBatch;
 
-import static org.assertj.core.api.Assertions.*;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public abstract class IterationTest extends DatabaseTestCase {
 
+    @Test
     public void testIteration() throws Exception {
         LevelDB db = obtainLevelDB();
 
         SimpleWriteBatch wb = new SimpleWriteBatch(db);
 
-        wb.put(new byte[] { 0, 0, 1 }, new byte[] { 1 });
-        wb.put(new byte[] { 0, 0, 2 }, new byte[] { 2 });
-        wb.put(new byte[] { 0, 0, 3 }, new byte[] { 3 });
+        wb.put(new byte[]{0, 0, 1}, new byte[]{1});
+        wb.put(new byte[]{0, 0, 2}, new byte[]{2});
+        wb.put(new byte[]{0, 0, 3}, new byte[]{3});
 
         wb.write();
 
         Iterator iterator = db.iterator();
 
-        db.put(new byte[] { 0, 0, 0 }, new byte[] { 0 });
+        db.put(new byte[]{0, 0, 0}, new byte[]{0});
 
         iterator.seekToFirst();
 
@@ -67,15 +72,15 @@ public abstract class IterationTest extends DatabaseTestCase {
             byte[] key = iterator.key();
             byte[] val = iterator.value();
 
-            assertThat(key).isNotNull();
-            assertThat(Bytes.lexicographicCompare(key, new byte[] { 0, 0, i })).isEqualTo(0);
-            assertThat(Bytes.lexicographicCompare(val, new byte[] { i })).isEqualTo(0);
+            assertNotNull(key);
+            assertEquals(0, Bytes.lexicographicCompare(key, new byte[]{0, 0, i}));
+            assertEquals(0, Bytes.lexicographicCompare(val, new byte[]{i}));
 
             iterator.next();
             i++;
         }
 
-        assertThat(i & 0xFF).isEqualTo(4);
+        assertEquals(4, i & 0xFF);
 
         iterator.close();
         iterator.close();
@@ -84,7 +89,7 @@ public abstract class IterationTest extends DatabaseTestCase {
 
         iterator.seekToLast();
 
-        assertThat(iterator.isValid()).isTrue();
+        assertTrue(iterator.isValid());
 
         i = 3;
         while (iterator.isValid()) {
@@ -92,15 +97,16 @@ public abstract class IterationTest extends DatabaseTestCase {
             byte[] key = iterator.key();
             byte[] val = iterator.value();
 
-            assertThat(key).isNotNull();
-            assertThat(Bytes.lexicographicCompare(key, new byte[] { 0, 0, i })).isEqualTo(0);
-            assertThat(Bytes.lexicographicCompare(val, new byte[] { i })).isEqualTo(0);
+            assertNotNull(key);
+            assertEquals(0, Bytes.lexicographicCompare(key, new byte[]{0, 0, i}));
+            assertEquals(0, Bytes.lexicographicCompare(val, new byte[]{i}));
+
 
             iterator.previous();
             i--;
         }
 
-        assertThat(i & 0xFF).isEqualTo(255);
+        assertEquals(255, i & 0xFF);
 
         boolean threw = false;
 
@@ -110,7 +116,7 @@ public abstract class IterationTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         threw = false;
 
@@ -120,13 +126,14 @@ public abstract class IterationTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         iterator.close();
 
         db.close();
     }
 
+    @Test
     public void testClosed() throws Exception {
         LevelDB db = obtainLevelDB();
 
@@ -142,7 +149,7 @@ public abstract class IterationTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         threw = false;
 
@@ -152,7 +159,7 @@ public abstract class IterationTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         threw = false;
 
@@ -162,7 +169,7 @@ public abstract class IterationTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         threw = false;
 
@@ -172,7 +179,7 @@ public abstract class IterationTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         threw = false;
 
@@ -182,7 +189,7 @@ public abstract class IterationTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         db.close();
     }

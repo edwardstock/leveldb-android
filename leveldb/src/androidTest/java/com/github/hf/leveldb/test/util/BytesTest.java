@@ -34,6 +34,7 @@ package com.github.hf.leveldb.test.util;
  */
 
 import com.github.hf.leveldb.util.Bytes;
+
 import junit.framework.TestCase;
 
 /**
@@ -51,7 +52,7 @@ public class BytesTest extends TestCase {
         a = new byte[] { 1, 2, 3, 0, 0, 0 };
         b = new byte[] { 1, 2, 3 };
 
-        assertTrue(Bytes.lexicographicCompare(a, b) == 0);
-        assertTrue(Bytes.lexicographicCompare(b, a) == 0);
+        assertEquals(0, Bytes.lexicographicCompare(a, b));
+        assertEquals(0, Bytes.lexicographicCompare(b, a));
     }
 }

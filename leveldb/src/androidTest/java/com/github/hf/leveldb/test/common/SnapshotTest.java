@@ -41,26 +41,33 @@ import com.github.hf.leveldb.implementation.mock.MockLevelDB;
 import com.github.hf.leveldb.implementation.mock.MockSnapshot;
 import com.github.hf.leveldb.util.Bytes;
 
-import static org.assertj.core.api.Assertions.*;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 
 public abstract class SnapshotTest extends DatabaseTestCase {
+    @Test
     public void testObtainReleaseSnapshot() throws Exception {
         LevelDB db = obtainLevelDB();
 
         Snapshot snapshot = db.obtainSnapshot();
 
-        assertThat(snapshot).isNotNull();
-        assertThat(snapshot.isReleased()).isFalse();
+        assertNotNull(snapshot);
+        assertFalse(snapshot.isReleased());
 
         db.releaseSnapshot(snapshot);
 
-        assertThat(snapshot.isReleased()).isTrue();
+        assertTrue(snapshot.isReleased());
 
         snapshot = db.obtainSnapshot();
 
-        assertThat(snapshot).isNotNull();
-        assertThat(snapshot.isReleased()).isFalse();
+        assertNotNull(snapshot);
+        assertFalse(snapshot.isReleased());
 
         db.releaseSnapshot(snapshot);
 
@@ -72,7 +79,7 @@ public abstract class SnapshotTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         threw = false;
 
@@ -82,7 +89,7 @@ public abstract class SnapshotTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         db.close();
 
@@ -94,59 +101,60 @@ public abstract class SnapshotTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
-        assertThat(snapshot.isReleased()).isTrue();
+        assertTrue(snapshot.isReleased());
 
         db = null;
 
         System.gc();
 
-        assertThat(snapshot.isReleased()).isTrue();
+        assertTrue(snapshot.isReleased());
     }
 
+    @Test
     public void testGet() throws Exception {
         LevelDB db = obtainLevelDB();
 
-        db.put(new byte[] { 1, 2, 3 }, new byte[] { 1, 2, 3 });
-        db.put(new byte[] { 3, 4, 5 }, new byte[] { 3, 4, 5 });
+        db.put(new byte[]{1, 2, 3}, new byte[]{1, 2, 3});
+        db.put(new byte[]{3, 4, 5}, new byte[]{3, 4, 5});
 
         Snapshot snapshotA = db.obtainSnapshot();
 
-        db.put(new byte[] { 5, 6, 7 }, new byte[] { 5, 6, 7 });
+        db.put(new byte[]{5, 6, 7}, new byte[]{5, 6, 7});
 
-        assertThat(db.get(new byte[] { 5, 6, 7 })).isNotNull();
+        assertNotNull(db.get(new byte[]{5, 6, 7}));
 
         Snapshot snapshotB = db.obtainSnapshot();
 
-        byte[] value = db.get(new byte[] { 1, 2, 3 }, snapshotA);
+        byte[] value = db.get(new byte[]{1, 2, 3}, snapshotA);
 
-        assertThat(value).isNotNull();
-        assertThat(Bytes.lexicographicCompare(value, new byte[] { 1, 2, 3 })).isEqualTo(0);
+        assertNotNull(value);
+        assertEquals(0, Bytes.lexicographicCompare(value, new byte[]{1, 2, 3}));
 
-        value = db.get(new byte[] { 1, 2, 3 }, snapshotB);
+        value = db.get(new byte[]{1, 2, 3}, snapshotB);
 
-        assertThat(value).isNotNull();
-        assertThat(Bytes.lexicographicCompare(value, new byte[] { 1, 2, 3 })).isEqualTo(0);
+        assertNotNull(value);
+        assertEquals(0, Bytes.lexicographicCompare(value, new byte[]{1, 2, 3}));
 
-        value = db.get(new byte[] { 3, 4, 5 }, snapshotA);
+        value = db.get(new byte[]{3, 4, 5}, snapshotA);
 
-        assertThat(value).isNotNull();
-        assertThat(Bytes.lexicographicCompare(value, new byte[] { 3, 4, 5 })).isEqualTo(0);
+        assertNotNull(value);
+        assertEquals(0, Bytes.lexicographicCompare(value, new byte[]{3, 4, 5}));
 
-        value = db.get(new byte[] { 3, 4, 5 }, snapshotB);
+        value = db.get(new byte[]{3, 4, 5}, snapshotB);
 
-        assertThat(value).isNotNull();
-        assertThat(Bytes.lexicographicCompare(value, new byte[] { 3, 4, 5 })).isEqualTo(0);
+        assertNotNull(value);
+        assertEquals(0, Bytes.lexicographicCompare(value, new byte[]{3, 4, 5}));
 
-        value = db.get(new byte[] { 5, 6, 7 }, snapshotA);
+        value = db.get(new byte[]{5, 6, 7}, snapshotA);
 
-        assertThat(value).isNull();
+        assertNull(value);
 
-        value = db.get(new byte[] { 5, 6, 7 }, snapshotB);
+        value = db.get(new byte[]{5, 6, 7}, snapshotB);
 
-        assertThat(value).isNotNull();
-        assertThat(Bytes.lexicographicCompare(value, new byte[] { 5, 6, 7 })).isEqualTo(0);
+        assertNotNull(value);
+        assertEquals(0, Bytes.lexicographicCompare(value, new byte[]{5, 6, 7}));
 
         db.releaseSnapshot(snapshotA);
         db.releaseSnapshot(snapshotB);

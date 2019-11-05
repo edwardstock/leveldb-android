@@ -38,8 +38,8 @@ import com.github.hf.leveldb.implementation.NativeLevelDB;
 import com.github.hf.leveldb.test.common.IterationTest;
 
 /**
-* Created by hermann on 8/18/14.
-*/
+ * Created by hermann on 8/18/14.
+ */
 public final class NativeIterationTest extends IterationTest {
     @Override
     protected LevelDB obtainLevelDB() throws Exception {

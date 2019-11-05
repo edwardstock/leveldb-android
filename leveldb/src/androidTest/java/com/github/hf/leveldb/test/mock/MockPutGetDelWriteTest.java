@@ -38,8 +38,8 @@ import com.github.hf.leveldb.implementation.mock.MockLevelDB;
 import com.github.hf.leveldb.test.common.PutGetDelWriteTest;
 
 /**
-* Created by hermann on 8/18/14.
-*/
+ * Created by hermann on 8/18/14.
+ */
 public final class MockPutGetDelWriteTest extends PutGetDelWriteTest {
     @Override
     protected LevelDB obtainLevelDB() throws Exception {

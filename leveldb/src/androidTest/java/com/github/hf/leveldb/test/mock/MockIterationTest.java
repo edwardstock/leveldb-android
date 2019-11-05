@@ -38,8 +38,8 @@ import com.github.hf.leveldb.implementation.mock.MockLevelDB;
 import com.github.hf.leveldb.test.common.IterationTest;
 
 /**
-* Created by hermann on 8/18/14.
-*/
+ * Created by hermann on 8/18/14.
+ */
 public final class MockIterationTest extends IterationTest {
     @Override
     protected LevelDB obtainLevelDB() throws Exception {

@@ -37,22 +37,21 @@ import com.github.hf.leveldb.LevelDB;
 import com.github.hf.leveldb.implementation.NativeLevelDB;
 import com.github.hf.leveldb.test.common.PutGetDelWriteTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 /**
-* Created by hermann on 8/18/14.
-*/
+ * Created by hermann on 8/18/14.
+ */
 public final class NativePutGetDelWriteTest extends PutGetDelWriteTest {
-    @Override
-    protected LevelDB obtainLevelDB() throws Exception {
-        return new NativeLevelDB(dbFile.getAbsolutePath(), LevelDB.configure().createIfMissing(true));
-    }
-
+    @Test
     public void testProperties() throws Exception {
         LevelDB levelDB = obtainLevelDB();
 
-        assertThat(levelDB.getProperty("leveldb.stats")).isNotNull();
-        assertThat(levelDB.getProperty("leveldb.sstables")).isNotNull();
+        assertNotNull(levelDB.getProperty("leveldb.stats"));
+        assertNotNull(levelDB.getProperty("leveldb.sstables"));
 
         boolean threw = false;
 
@@ -62,8 +61,13 @@ public final class NativePutGetDelWriteTest extends PutGetDelWriteTest {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         levelDB.close();
+    }
+
+    @Override
+    protected LevelDB obtainLevelDB() throws Exception {
+        return new NativeLevelDB(dbFile.getAbsolutePath(), LevelDB.configure().createIfMissing(true));
     }
 }

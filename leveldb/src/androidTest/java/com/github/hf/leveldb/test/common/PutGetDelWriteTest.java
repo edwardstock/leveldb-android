@@ -34,17 +34,23 @@ package com.github.hf.leveldb.test.common;
  */
 
 import com.github.hf.leveldb.LevelDB;
-import com.github.hf.leveldb.util.SimpleWriteBatch;
 import com.github.hf.leveldb.exception.LevelDBClosedException;
 import com.github.hf.leveldb.util.Bytes;
+import com.github.hf.leveldb.util.SimpleWriteBatch;
 
-import static org.assertj.core.api.Assertions.*;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by hermann on 8/16/14.
  */
 public abstract class PutGetDelWriteTest extends DatabaseTestCase {
 
+    @Test
     public void testPut() throws Exception {
         LevelDB db = obtainLevelDB();
 
@@ -61,7 +67,7 @@ public abstract class PutGetDelWriteTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         db.close();
 
@@ -73,9 +79,10 @@ public abstract class PutGetDelWriteTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
     }
 
+    @Test
     public void testGet() throws Exception {
         LevelDB db = obtainLevelDB();
 
@@ -83,21 +90,21 @@ public abstract class PutGetDelWriteTest extends DatabaseTestCase {
 
         byte[] result = db.get(new byte[]{1, 2, 3});
 
-        assertThat(result).isNotNull();
-        assertThat(Bytes.lexicographicCompare(new byte[] { 1, 2, 3 }, result) == 0).isTrue();
+        assertNotNull(result);
+        assertEquals(0, Bytes.lexicographicCompare(new byte[]{1, 2, 3}, result));
 
         db.put(new byte[]{1, 2, 4}, new byte[]{1, 2, 4}, true);
 
         result = db.get(new byte[]{1, 2, 4});
 
-        assertThat(result).isNotNull();
-        assertThat(Bytes.lexicographicCompare(new byte[] { 1, 2, 4 }, result) == 0).isTrue();
+        assertNotNull(result);
+        assertEquals(0, Bytes.lexicographicCompare(new byte[]{1, 2, 4}, result));
 
         db.put(new byte[]{1, 2, 4}, null, false);
 
         result = db.get(new byte[]{1, 2, 4});
 
-        assertThat(result).isNull();
+        assertNull(result);
 
         boolean threw = false;
 
@@ -107,7 +114,7 @@ public abstract class PutGetDelWriteTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         db.close();
 
@@ -119,27 +126,28 @@ public abstract class PutGetDelWriteTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
     }
 
+    @Test
     public void testDel() throws Exception {
         LevelDB db = obtainLevelDB();
 
         db.put(new byte[]{1, 2, 3}, new byte[]{1, 2, 3}, false);
 
-        assertThat(db.get(new byte[]{1, 2, 3})).isNotNull();
+        assertNotNull(db.get(new byte[]{1, 2, 3}));
 
         db.del(new byte[]{1, 2, 3}, false);
 
-        assertThat(db.get(new byte[]{1, 2, 3})).isNull();
+        assertNull(db.get(new byte[]{1, 2, 3}));
 
         db.put(new byte[]{1, 2, 3}, new byte[]{1, 2, 3}, false);
 
-        assertThat(db.get(new byte[]{1, 2, 3})).isNotNull();
+        assertNotNull(db.get(new byte[]{1, 2, 3}));
 
         db.del(new byte[]{1, 2, 3}, true);
 
-        assertThat(db.get(new byte[]{1, 2, 3})).isNull();
+        assertNull(db.get(new byte[]{1, 2, 3}));
 
         boolean threw = false;
 
@@ -149,7 +157,7 @@ public abstract class PutGetDelWriteTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         db.close();
 
@@ -161,33 +169,34 @@ public abstract class PutGetDelWriteTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
     }
 
+    @Test
     public void testWrite() throws Exception {
         LevelDB db = obtainLevelDB();
 
         SimpleWriteBatch swb = new SimpleWriteBatch(db);
 
-        swb.put(new byte[] { 1, 2, 3 }, new byte[] { 1, 2, 3 });
-        swb.put(new byte[] { 1, 2, 3, 4 }, new byte[] { 1, 2, 3, 4 });
+        swb.put(new byte[]{1, 2, 3}, new byte[]{1, 2, 3});
+        swb.put(new byte[]{1, 2, 3, 4}, new byte[]{1, 2, 3, 4});
 
         db.write(swb, false);
 
-        assertThat(db.get(new byte[]{1, 2, 3})).isNotNull();
-        assertThat(db.get(new byte[]{1, 2, 3, 4})).isNotNull();
+        assertNotNull(db.get(new byte[]{1, 2, 3}));
+        assertNotNull(db.get(new byte[]{1, 2, 3, 4}));
 
         swb = new SimpleWriteBatch(db);
 
         swb.put(new byte[]{1, 2, 3, 4}, new byte[]{1, 2, 3});
-        swb.del(new byte[] { 1, 2, 3 });
+        swb.del(new byte[]{1, 2, 3});
 
         db.write(swb, true);
 
-        assertThat(db.get(new byte[]{1, 2, 3, 4})).isNotNull();
-        assertThat(Bytes.lexicographicCompare(db.get(new byte[]{1, 2, 3, 4}), new byte[] { 1, 2, 3 }) == 0).isTrue();
+        assertNotNull(db.get(new byte[]{1, 2, 3, 4}));
+        assertEquals(0, Bytes.lexicographicCompare(db.get(new byte[]{1, 2, 3, 4}), new byte[]{1, 2, 3}));
 
-        assertThat(db.get(new byte[]{1, 2, 3})).isNull();
+        assertNull(db.get(new byte[]{1, 2, 3}));
 
         boolean threw = false;
 
@@ -197,7 +206,7 @@ public abstract class PutGetDelWriteTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
 
         db.close();
 
@@ -209,6 +218,6 @@ public abstract class PutGetDelWriteTest extends DatabaseTestCase {
             threw = true;
         }
 
-        assertThat(threw).isTrue();
+        assertTrue(threw);
     }
 }

@@ -33,23 +33,30 @@ package com.github.hf.leveldb.test.util;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import com.github.hf.leveldb.util.SimpleWriteBatch;
+import android.util.Log;
+
 import com.github.hf.leveldb.WriteBatch;
+import com.github.hf.leveldb.util.SimpleWriteBatch;
+
 import junit.framework.TestCase;
+
+import org.junit.Test;
+
 
 /**
  * Created by hermann on 8/16/14.
  */
 public class SimpleWriteBatchTest extends TestCase {
 
+    @Test
     public void testOperations() throws Exception {
         SimpleWriteBatch writeBatch = new SimpleWriteBatch();
 
-        writeBatch.put(new byte[]{ 1, 2, 3 }, new byte[]{ 1, 2, 3 });
+        writeBatch.put(new byte[]{1, 2, 3}, new byte[]{1, 2, 3});
 
         assertEquals(1, writeBatch.getAllOperations().size());
 
-        writeBatch.del(new byte[] { 1, 2, 3 });
+        writeBatch.del(new byte[]{1, 2, 3});
 
         assertEquals(2, writeBatch.getAllOperations().size());
 
@@ -116,5 +123,7 @@ public class SimpleWriteBatchTest extends TestCase {
 
         assertTrue(threw);
         assertEquals(2, writeBatch.getAllOperations().size());
+
+        Log.d("LEVELDB_TEST", "OpTest Finished");
     }
 }

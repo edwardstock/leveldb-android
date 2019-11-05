@@ -34,7 +34,6 @@ package com.github.hf.leveldb.test.mock;
  */
 
 import com.github.hf.leveldb.LevelDB;
-import com.github.hf.leveldb.implementation.mock.MockSnapshot;
 import com.github.hf.leveldb.test.common.SnapshotTest;
 
 /**
