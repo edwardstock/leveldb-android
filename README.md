@@ -26,7 +26,7 @@ And then this as a dependency:
 
 ```groovy
 dependencies {
-  implementation 'com.edwardstock.android:leveldb:2.0.0'
+  implementation 'com.edwardstock.android:leveldb:2.0.1'
 }
 ```
 
@@ -188,10 +188,14 @@ LevelDB.mock();
 Until Google (or someone else) fixes the Android Gradle build tools to properly
 support NDK, this is the way to build this project.
 
-1. Install the [NDK](https://developer.android.com/tools/sdk/ndk/index.html)
-. (Tested with ndk-r10d.)
-2. Add NDK to `$PATH`.
-3. Build with Gradle (`preBuild` depends on `preBuildLevelDB`)
+1. Install the [NDK](https://developer.android.com/ndk)
+2. Build with Gradle (leveldb::assembleRelease)
+
+Or u can build to local maven repository:
+```bash
+cd /path/to/project
+sh publish_local.sh
+```
 
 ## License
 

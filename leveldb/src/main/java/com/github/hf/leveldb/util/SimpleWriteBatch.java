@@ -146,6 +146,9 @@ public class SimpleWriteBatch implements WriteBatch {
     }
 
     public SimpleWriteBatch del(String key) {
+        if (key == null) {
+            throw new IllegalArgumentException("Key must not be null");
+        }
         return del(key.getBytes());
     }
 

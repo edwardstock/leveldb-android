@@ -37,7 +37,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
 group = "com.edwardstock.android"
-version = "2.0.0"
+version = "2.0.1"
 
 ext {
     buildArtifactName = project.name

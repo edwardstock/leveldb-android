@@ -116,7 +116,8 @@ public class SimpleWriteBatchTest extends TestCase {
         threw = false;
 
         try {
-            writeBatch.del(null);
+            String s = null;
+            writeBatch.del(s);
         } catch (IllegalArgumentException e) {
             threw = true;
         }
